@@ -1,0 +1,158 @@
+#!/usr/bin/perl -wT
+#
+# nosubstr - print only lines in a file that are not substrings of other lines
+#
+# @(#) $Revision$
+# @(#) $Id$
+# @(#) $Source$
+#
+# Copyright (c) 2003 by Landon Curt Noll.  All Rights Reserved.
+#
+# Permission to use, copy, modify, and distribute this software and
+# its documentation for any purpose and without fee is hereby granted,
+# provided that the above copyright, this permission notice and text
+# this comment, and the disclaimer below appear in all of the following:
+#
+#       supporting documentation
+#       source copies
+#       source works derived from this source
+#       binaries derived from this source or from derived source
+#
+# LANDON CURT NOLL DISCLAIMS ALL WARRANTIES WITH REGARD TO THIS SOFTWARE,
+# INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO
+# EVENT SHALL LANDON CURT NOLL BE LIABLE FOR ANY SPECIAL, INDIRECT OR
+# CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF
+# USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+# OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+# PERFORMANCE OF THIS SOFTWARE.
+#
+# chongo (Landon Curt Noll, http://www.isthe.com/chongo/index.html) /\oo/\
+#
+# Share and enjoy! :-)
+
+# requirements
+#
+use strict;
+use vars qw($opt_v $opt_l);
+use Getopt::Long;
+
+# version - RCS style *and* usable by MakeMaker
+#
+my $VERSION = substr q$Revision: 1.1 $, 10;
+$VERSION =~ s/\s+$//;
+
+# my vars
+#
+my %seen;	# $seen{$line} defined means $line seen at "file lineno"
+my @line;	# array of unique lines seen in read order
+
+# usage and help
+#
+my $usage = "$0 [-v] [-l] file ...";
+my $help = qq{$usage
+
+	-v	print substring matches
+	-l	look at only leading substrings
+};
+my %optctl = (
+    "v" => \$opt_v,
+    "l" => \$opt_l
+);
+
+
+# setup
+#
+MAIN: {
+    my $line;		# current line being read
+    my $other;		# other line we are testing against
+    my $lineno;		# current line number
+    my $filename;	# current filename
+
+    # setup
+    #
+    select(STDOUT);
+    $| = 1;
+
+    # set the defaults
+    #
+    $opt_v = 0;
+
+    # parse args
+    #
+    if (!GetOptions(%optctl)) {
+	print STDERR "invalid command line\nusage: $help\n";
+	exit(1);
+    }
+
+    # read in each line
+    #
+    $lineno = 0;
+    $filename = "";
+    while (defined($line = <>)) {
+
+    	# prep line
+	#
+	if ($ARGV eq $filename) {
+	    ++$lineno;
+	} else {
+	    $lineno = 1;
+	    $filename = $ARGV;
+	}
+	chomp $line;
+
+    	# ignore if we have already seen an exact line match
+	#
+	if (defined($seen{$line})) {
+	    print STDERR "duplicate line: $filename line $lineno\n" if $opt_v;
+	    next;
+	}
+	$seen{$line} = "file $filename line $lineno";
+
+	# store line for substring inspection
+	#
+	push @line,$line;
+    }
+
+    # print lines, in order they were read, if they are not substrings of others
+    #
+    LINE: foreach $line (@line) {
+
+    	# compare the line with all other lines for a substring
+	#
+	foreach $other (@line) {
+
+	    # skip substring check if we found ourself
+	    #
+	    next if $line eq $other;
+
+	    # skip substring check on empty lines
+	    #
+	    next if length($other) <= 0;
+
+	    # substring check (depending on -l or not)
+	    #
+	    if ($opt_l) {
+	    	if ($line =~ m{^\Q$other}) {
+		    if ($opt_v) {
+		    	print STDERR
+			  "$seen{$line} leading substring of $seen{$other}\n";
+		    }
+		    next LINE;
+		}
+	    } else {
+	    	if ($line =~ m{\Q$other}) {
+		    if ($opt_v) {
+		    	print STDERR
+			  "$seen{$line} substring of $seen{$other}\n";
+		    }
+		    next LINE;
+		}
+	    }
+	}
+
+	# line is unique, print it
+	#
+	print "$line\n";
+    }
+    exit(0);
+}
