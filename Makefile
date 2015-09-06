@@ -3,9 +3,9 @@
 #
 # nosubstr - print only lines in a file that are not substrings of other lines
 #
-# @(#) $Revision$
-# @(#) $Id$
-# @(#) $Source$
+# @(#) $Revision: 1.1 $
+# @(#) $Id: Makefile,v 1.1 2003/03/09 08:47:48 chongo Exp root $
+# @(#) $Source: /usr/local/src/bin/nosubstr/RCS/Makefile,v $
 #
 # Copyright (c) 2003 by Landon Curt Noll.  All Rights Reserved.
 #
@@ -36,7 +36,7 @@ SHELL= /bin/sh
 CC= cc
 CFLAGS= -O3 -g3
 
-TOPNAME= cmd
+TOPNAME= bin
 INSTALL= install
 
 DESTDIR= /usr/local/bin
