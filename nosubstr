@@ -2,9 +2,9 @@
 #
 # nosubstr - print only lines in a file that are not substrings of other lines
 #
-# @(#) $Revision: 1.1 $
-# @(#) $Id: nosubstr,v 1.1 2003/03/09 08:47:48 chongo Exp chongo $
-# @(#) $Source: /usr/local/src/cmd/nosubstr/RCS/nosubstr,v $
+# @(#) $Revision: 1.2 $
+# @(#) $Id: nosubstr,v 1.2 2004/05/21 15:28:07 chongo Exp $
+# @(#) $Source: /usr/local/src/bin/nosubstr/RCS/nosubstr,v $
 #
 # Copyright (c) 2003 by Landon Curt Noll.  All Rights Reserved.
 #
@@ -39,7 +39,7 @@ use Getopt::Long;
 
 # version - RCS style *and* usable by MakeMaker
 #
-my $VERSION = substr q$Revision: 1.1 $, 10;
+my $VERSION = substr q$Revision: 1.2 $, 10;
 $VERSION =~ s/\s+$//;
 
 # my vars
