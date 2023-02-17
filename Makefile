@@ -1,13 +1,8 @@
-#!/bin/make
-# @(#)Makefile	1.2 04 May 1995 02:06:57
+#!/usr/bin/env make
 #
 # nosubstr - print only lines in a file that are not substrings of other lines
 #
-# @(#) $Revision: 1.2 $
-# @(#) $Id: Makefile,v 1.2 2015/09/06 09:45:34 root Exp $
-# @(#) $Source: /usr/local/src/bin/nosubstr/RCS/Makefile,v $
-#
-# Copyright (c) 2003 by Landon Curt Noll.  All Rights Reserved.
+# Copyright (c) 2003,2023 by Landon Curt Noll.  All Rights Reserved.
 #
 # Permission to use, copy, modify, and distribute this software and
 # its documentation for any purpose and without fee is hereby granted,
@@ -32,7 +27,7 @@
 # Share and enjoy! :-)
 
 
-SHELL= /bin/sh
+SHELL= bash
 CC= cc
 CFLAGS= -O3 -g3
 
