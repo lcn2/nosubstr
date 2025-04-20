@@ -10,9 +10,42 @@ sudo make install
 ```
 
 
-# To use
+# Example
+
+Print only the unique lines in `Makefile`:
 
 ```sh
+$ /usr/local/bin/nosubstr Makefile
+#
+
+CC= cc
+CHMOD= chmod
+CP= cp
+ID= id
+INSTALL= install
+RM= rm
+SHELL= bash
+V=@:
+PREFIX= /usr/local
+DESTDIR= ${PREFIX}/bin
+TARGETS= nosubstr
+all: ${TARGETS}
+	${V} echo DEBUG =-= $@ start =-=
+	${V} echo DEBUG =-= $@ end =-=
+.PHONY: all configure clean clobber install
+configure:
+clean:
+clobber: clean
+install: all
+	@if [[ $$(${ID} -u) != 0 ]]; then echo "ERROR: must be root to make $@" 1>&2; exit 2; fi
+	${INSTALL} -d -m 0755 ${DESTDIR}
+	${INSTALL} -m 0555 ${TARGETS} ${DESTDIR}
+```
+
+
+# To use
+
+```
 /usr/local/bin/nosubstr [-v] [-l] file ...
 
     -h      print help and exit
@@ -25,15 +58,6 @@ sudo make install
     file ...   process lines in these file(s)
 
 nosubstr version: 1.2.1 2025-03-26
-```
-
-
-# Example
-
-Print only the unique lines in `Makefile`:
-
-```sh
-/usr/local/bin/nosubstr Makefile
 ```
 
 
